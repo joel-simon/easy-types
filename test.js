@@ -1,15 +1,4 @@
-easy-types
-==========
-Easy type checking for node.js.
-
-## Installation
-  npm install easy-types
-
-
-## Usage
-
-``` js
-ar checker = require('./easy-types.js');
+var checker = require('./easy-types.js');
 var types = { 
   myCrazyObject: {
     // Primitive type checking.
@@ -67,4 +56,16 @@ try {
 }
 
 
-```
+
+
+
+
+
+
+
+
+
+
+
+
+
