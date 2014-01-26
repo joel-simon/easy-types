@@ -10,6 +10,10 @@ Easy type checking for node.js.
 
 ``` js
 ar checker = require('./easy-types.js');
+/*
+	Define objects that can than be checked with
+	checker.is(yourObj, 'yourType')
+*/
 var types = { 
   myCrazyObject: {
     // Primitive type checking.

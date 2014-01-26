@@ -1,0 +1,25 @@
+{
+  "name": "easy-types",
+  "description": "Easy type checking",
+  "version": "0.0.1",
+  "author": {
+    "name": "Joel Simon"
+  },
+  "homepage": "https://github.com/Sloth6/easy-types",
+  "bugs": {
+    "url": "https://github.com/Sloth6/easy-types/issues"
+  },
+  "keywords": [
+    "type checking",
+    "typed"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/Sloth6/easy-types.git"
+  },
+  "engines": {
+    "node": ">=0.1.90"
+  },
+  "main": "easy-types",
+  "readmeFilename": "README.md"
+}
