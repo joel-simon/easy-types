@@ -9,7 +9,7 @@ Easy type checking for node.js.
 ## Usage
 
 ``` js
-ar checker = require('./easy-types.js');
+var checker = require('./easy-types.js');
 /*
 	Define objects that can than be checked with
 	checker.is(yourObj, 'yourType')
