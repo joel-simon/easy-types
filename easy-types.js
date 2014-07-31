@@ -2,7 +2,6 @@
   MIT license
 */
 'use strict';
-module.exports.is = is;
 module.exports.addTypes = addTypes;
 
 var types = {
@@ -30,7 +29,6 @@ var types = {
 }
 
 function is(obj, req) {
-  // console.log(arguments);
   switch (typeof req) {
     // An arbitrary function to apply to obj
     case 'function':
@@ -56,7 +54,9 @@ function is(obj, req) {
         if (!type) throw 'Nonexistent type, '+typeName
         if (!Array.isArray(obj))
           throw obj+' should be an array.';
-
+        if (obj.length === 0) {
+          return;
+        }
         for (var i = 0; i < obj.length; i++) {
           is(obj[i], type)
         }
@@ -71,7 +71,7 @@ function is(obj, req) {
       if (obj === null) return;
       // {} case
       for(var e in req) {
-        if (!obj.hasOwnProperty(e)) throw 'Nonexistent field: '+e;
+        if (!obj.hasOwnProperty(e)) throw obj+' does not contain field'+e +'for requirement'+req;
         is(obj[e], req[e]);
       }
       
@@ -85,6 +85,23 @@ var userTypes = {};
 function addTypes(obj) {
   userTypes = obj;
   return module.exports
+}
+
+module.exports = function(types) {
+  addTypes( types || {} );
+  return function(obj) {
+    return {
+      is: function(req){
+        try {
+          is(obj, req)
+        } catch(e) {
+          console.log(typeof (e));
+          throw '{'+JSON.stringify(obj)+'} Fails to meet {'+JSON.stringify(req)+'}\n Because' + e
+        }
+        return true
+      }
+    }
+  }
 }
 // function makeEnum () {
 //   var args = arguments;
