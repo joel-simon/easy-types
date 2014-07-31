@@ -28,11 +28,15 @@ var types = {
   }
 }
 
+function pretty(obj) {
+  return JSON.stringify(obj, null, '  ');
+}
+
 function is(obj, req) {
   switch (typeof req) {
     // An arbitrary function to apply to obj
     case 'function':
-      if (!req(obj)) throw (obj+' failed '+req)
+      if (!req(obj)) throw (pretty(obj) + ' failed ' + req)
       break;  
 
     case 'string':
@@ -43,7 +47,7 @@ function is(obj, req) {
       // default types
       else if (types[req]) {
         if (! types[req](obj)) {
-          throw obj+' should be a ' + req;
+          throw pretty(obj)+' should be a ' + req;
         }
       }
       // arrays : "[type]"
@@ -53,7 +57,7 @@ function is(obj, req) {
         var type = userTypes[typeName] || types[typeName];
         if (!type) throw 'Nonexistent type, '+typeName
         if (!Array.isArray(obj))
-          throw obj+' should be an array.';
+          throw pretty(obj)+' should be an array.';
         if (obj.length === 0) {
           return;
         }
@@ -63,21 +67,21 @@ function is(obj, req) {
       }
       // primitive types : [boolean, number, undefined, string, object]
       else if (typeof(obj) !== req)
-        throw '"'+obj+'" should be a(n) '+req;
+        throw pretty(obj) + ' should be a(n) '+req;
       break;
 
     case 'object':
-      if (typeof obj !== 'object') throw obj+' should be an object';
+      if (typeof obj !== 'object') throw pretty(obj)+' should be an object';
       if (obj === null) return;
       // {} case
       for(var e in req) {
-        if (!obj.hasOwnProperty(e)) throw obj+' does not contain field'+e +'for requirement'+req;
+        if (!obj.hasOwnProperty(e)) throw pretty(obj)+' does not contain field'+e +'for requirement'+req;
         is(obj[e], req[e]);
       }
       
       break;
       default:
-        throw 'Not a valid requirement: '+ req + ' for ' + obj
+        throw 'Not a valid requirement: '+req +' for '+obj
     }
 }
 
