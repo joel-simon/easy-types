@@ -26,7 +26,9 @@ var types = {
     b : 'otherObj'
   },
 }
-var check = require('./easy-types.js')(types);
+var check = require('./easy-types.js');
+
+check.prototype.addTypes(types);
 
 var toCheck = {
   a: 'domo arigato',
@@ -46,11 +48,8 @@ var toCheck = {
 
 try {
   check(toCheck).is('myCrazyObject')
-  check({a:232, b: '2'}).is({a:'string', b:'string'})
   console.log('verified');
   // Your awesome code here.
 } catch (e) {
   console.log(e);
 }
-
-check({a:232, b: '2'}).is({a:'string', b:'string'});

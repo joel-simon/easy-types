@@ -47,7 +47,7 @@ function is(obj, req) {
       // default types
       else if (types[req]) {
         if (! types[req](obj)) {
-          throw pretty(obj)+' should be a ' + req;
+          throw pretty(obj)+' should be a ' + pretty(req);
         }
       }
       // arrays : "[type]"
@@ -57,7 +57,7 @@ function is(obj, req) {
         var type = userTypes[typeName] || types[typeName];
         if (!type) throw 'Nonexistent type, '+typeName
         if (!Array.isArray(obj))
-          throw pretty(obj)+' should be an array.';
+          throw pretty(obj)+' should be an array of '+typeName;
         if (obj.length === 0) {
           return;
         }
@@ -81,7 +81,7 @@ function is(obj, req) {
       
       break;
       default:
-        throw 'Not a valid requirement: '+req +' for '+obj
+        throw 'Not a valid requirement: '+pretty(req) +' for '+ pretty(obj);
     }
 }
 
@@ -91,28 +91,20 @@ function addTypes(obj) {
   return module.exports
 }
 
-module.exports = function(types) {
-  addTypes( types || {} );
-  return function(obj) {
-    return {
-      is: function(req){
-        try {
-          is(obj, req)
-        } catch(e) {
-          console.log(typeof (e));
-          throw '{'+JSON.stringify(obj)+'} Fails to meet {'+JSON.stringify(req)+'}\n Because' + e
-        }
-        return true
+module.exports = function(obj) {
+  return {
+    is: function(req){
+      try {
+        is(obj, req)
+      } catch(e) {
+        console.trace()
+        throw '{'+pretty(obj)+'} Fails to meet {'+pretty(req)+'}\n Because' + e
       }
+      return true
     }
   }
 }
-// function makeEnum () {
-//   var args = arguments;
-//   return (function (type) {
-//     for (var i = 0; i < args.length; i++) {
-//       return true;
-//     }
-//     return false;
-//   });
-// }
+
+module.exports.prototype.addTypes = function(obj) {
+  addTypes(obj)
+}
