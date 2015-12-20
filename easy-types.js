@@ -94,7 +94,11 @@ function is(obj, req) {
       if (obj === null) throw pretty(obj)+' is not of type '+pretty(req);
       // {} case
       for(var e in req) {
-        if (!obj.hasOwnProperty(e)) throw pretty(obj)+' does not contain field'+e +'for requirement'+req;
+        if (!obj.hasOwnProperty(e) &&
+            req[e].charAt(req[e].length - 1) !== '?') {
+          throw pretty(obj)+' does not contain field '+e+
+            ' for requirement '+pretty(req);
+        }
         is(obj[e], req[e]);
       }
       
@@ -117,7 +121,7 @@ module.exports = function(obj) {
         is(obj, req)
       } catch(e) {
         console.trace()
-        throw '{'+pretty(obj)+'} Fails to meet {'+pretty(req)+'}\n Because ' + e
+        throw '{'+pretty(obj)+'} Fails to meet {'+pretty(req)+'}\nBecause ' + e
       }
       return true
     }

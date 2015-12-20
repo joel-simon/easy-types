@@ -48,7 +48,6 @@ var toCheck = {
   k: [1,2,3,4],
   l: {a:1, b: {a:1, b:undefined}},
   n: [{a:1, b:undefined}, {a:1, b:undefined}],
-  o: undefined,
   p: [undefined, {a:1, b:undefined}]
 }
 
