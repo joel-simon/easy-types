@@ -18,12 +18,16 @@ var types = {
     // User defined types
     l: 'otherObj',
     // Arrays of user defined types 
-    n: '[otherObj]'
+    n: '[otherObj]',
+    // Optional types
+    o: 'number?',
+    // Optional user defined types
+    p: '[otherObj?]'
   },
 
   otherObj : {
     a : 'int',
-    b : 'otherObj'
+    b : 'otherObj?'
   },
 }
 var check = require('./easy-types.js');
@@ -42,8 +46,10 @@ var toCheck = {
   i: new Date(),
   j: 42,
   k: [1,2,3,4],
-  l: {a:1, b: {a:1, b:null}},
-  n: [{a:1, b: null}, {a:1, b: null}]
+  l: {a:1, b: {a:1, b:undefined}},
+  n: [{a:1, b:undefined}, {a:1, b:undefined}],
+  o: undefined,
+  p: [undefined, {a:1, b:undefined}]
 }
 
 try {

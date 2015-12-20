@@ -40,6 +40,15 @@ function is(obj, req) {
       break;  
 
     case 'string':
+      // optional types
+      var optReq = req.charAt(req.length - 1) === '?' ?
+        req.slice(0, -1) :
+        undefined;
+      // success if optional type and undefined value
+      if (optReq) {
+        if (obj === undefined) return;
+        req = optReq;
+      }
       // user defined types
       if (userTypes[req]) {
         is(obj, userTypes[req]);
@@ -55,24 +64,34 @@ function is(obj, req) {
         if (req.length === 2) throw 'Empty type array, should be "[type]".';
         var typeName = req.slice(1, -1);
         var type = userTypes[typeName] || types[typeName];
-        if (!type) throw 'Nonexistent type, '+typeName
-        if (!Array.isArray(obj))
+
+        // optional type arrays
+        var optTypeName;
+        if (!type && typeName.charAt(typeName.length - 1) === '?') {
+          optTypeName = typeName.slice(0, -1);
+          type = userTypes[optTypeName] || types[optTypeName];
+        }
+        if (!type) throw 'Nonexistent type, '+typeName;
+        if (!Array.isArray(obj)) {
           throw pretty(obj)+' should be an array of '+typeName;
+        }
         if (obj.length === 0) {
           return;
         }
         for (var i = 0; i < obj.length; i++) {
+          if (optTypeName && obj[i] === undefined) continue;
           is(obj[i], type)
         }
       }
       // primitive types : [boolean, number, undefined, string, object]
-      else if (typeof(obj) !== req)
+      else if (typeof(obj) !== req) {
         throw pretty(obj) + ' should be a(n) '+req;
+      }
       break;
 
     case 'object':
       if (typeof obj !== 'object') throw pretty(obj)+' should be an object';
-      if (obj === null) return;
+      if (obj === null) throw pretty(obj)+' is not of type '+pretty(req);
       // {} case
       for(var e in req) {
         if (!obj.hasOwnProperty(e)) throw pretty(obj)+' does not contain field'+e +'for requirement'+req;
@@ -98,7 +117,7 @@ module.exports = function(obj) {
         is(obj, req)
       } catch(e) {
         console.trace()
-        throw '{'+pretty(obj)+'} Fails to meet {'+pretty(req)+'}\n Because' + e
+        throw '{'+pretty(obj)+'} Fails to meet {'+pretty(req)+'}\n Because ' + e
       }
       return true
     }
