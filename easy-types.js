@@ -34,10 +34,11 @@ function pretty(obj) {
 
 function is(obj, req) {
   switch (typeof req) {
-    // An arbitrary function to apply to obj
+    // Check for constructor, or arbitrary function to apply to obj
     case 'function':
-      if (!req(obj)) throw (pretty(obj) + ' failed ' + req)
-      break;  
+      if (obj instanceof req) { return; }
+      if (!req(obj)) throw (pretty(obj) + ' failed ' + req);
+      break;
 
     case 'string':
       // optional types
