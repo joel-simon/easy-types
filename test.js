@@ -12,7 +12,7 @@ var types = {
     h: 'buffer',
     i: 'date',
     // Functions
-    j: function(e){ return e === 42 },
+    j: function(e){ return e === 42; },
     // Arrays 
     k: '[int]',
     // User defined types
@@ -29,7 +29,7 @@ var types = {
     a : 'int',
     b : 'otherObj?'
   },
-}
+};
 var check = require('./easy-types.js');
 
 check.prototype.addTypes(types);
@@ -49,10 +49,10 @@ var toCheck = {
   l: {a:1, b: {a:1, b:undefined}},
   n: [{a:1, b:undefined}, {a:1, b:undefined}],
   p: [undefined, {a:1, b:undefined}]
-}
+};
 
 try {
-  check(toCheck).is('myCrazyObject')
+  check(toCheck).is('myCrazyObject');
   console.log('verified');
   // Your awesome code here.
 } catch (e) {
