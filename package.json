@@ -2,6 +2,9 @@
   "name": "easy-types",
   "description": "Easy type checking",
   "version": "0.0.5",
+  "scripts": {
+    "test": "node test.js"
+  },
   "author": {
     "name": "Joel Simon"
   },
