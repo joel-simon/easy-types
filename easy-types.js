@@ -2,7 +2,6 @@
   MIT license
 */
 'use strict';
-module.exports.addTypes = addTypes;
 
 var types = {
   posInt: function(i) {
@@ -26,18 +25,24 @@ var types = {
   buffer: function(b) {
     return Buffer.isBuffer(b);
   }
-}
+};
 
 function pretty(obj) {
   return JSON.stringify(obj, null, '  ');
+}
+
+var userTypes = {};
+function addTypes(obj) {
+  userTypes = obj;
+  return module.exports;
 }
 
 function is(obj, req) {
   switch (typeof req) {
     // An arbitrary function to apply to obj
     case 'function':
-      if (!req(obj)) throw (pretty(obj) + ' failed ' + req)
-      break;  
+      if (!req(obj)) throw (pretty(obj) + ' failed ' + req);
+      break;
 
     case 'string':
       // optional types
@@ -80,7 +85,7 @@ function is(obj, req) {
         }
         for (var i = 0; i < obj.length; i++) {
           if (optTypeName && obj[i] === undefined) continue;
-          is(obj[i], type)
+          is(obj[i], type);
         }
       }
       // primitive types : [boolean, number, undefined, string, object]
@@ -93,7 +98,8 @@ function is(obj, req) {
       if (typeof obj !== 'object') throw pretty(obj)+' should be an object';
       if (obj === null) throw pretty(obj)+' is not of type '+pretty(req);
       // {} case
-      for(var e in req) {
+      for (var e in req) {
+        if (!req.hasOwnProperty(e)) { continue; }
         if (!obj.hasOwnProperty(e) &&
             req[e].charAt(req[e].length - 1) !== '?') {
           throw pretty(obj)+' does not contain field '+e+
@@ -101,33 +107,29 @@ function is(obj, req) {
         }
         is(obj[e], req[e]);
       }
-      
+
       break;
       default:
         throw 'Not a valid requirement: '+pretty(req) +' for '+ pretty(obj);
     }
 }
 
-var userTypes = {};
-function addTypes(obj) {
-  userTypes = obj;
-  return module.exports
-}
-
 module.exports = function(obj) {
   return {
     is: function(req){
       try {
-        is(obj, req)
+        is(obj, req);
       } catch(e) {
-        console.trace()
-        throw '{'+pretty(obj)+'} Fails to meet {'+pretty(req)+'}\nBecause ' + e
+        console.trace();
+        throw '{'+pretty(obj)+'} Fails to meet {'+pretty(req)+'}\nBecause ' + e;
       }
-      return true
+      return true;
     }
-  }
-}
+  };
+};
 
 module.exports.prototype.addTypes = function(obj) {
-  addTypes(obj)
-}
+  addTypes(obj);
+};
+module.exports.addTypes = addTypes;
+
